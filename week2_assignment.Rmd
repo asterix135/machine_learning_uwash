@@ -24,8 +24,38 @@ In particular, we are going to use logical filters to select rows of an SFrame.
 Using such filters, first select the houses that have ‘sqft_living’ higher than 2000 sqft but no larger than 4000 sqft.
 
 What fraction of the all houses have ‘sqft_living’ in this range? Save this result to answer the quiz at the end.
-```{r}
-sales[sales$sqft_living > 2000 ]
+
+```{r question 2}
+len1 <- nrow(sales[sales$sqft_living > 2000 & sales$sqft_living <= 4000,])
+len1 / nrow(sales)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+3. Building a regression model with several more features: In the sample notebook, we
+built two regression models to predict house prices, one using just ‘sqft_living’ 
+and the other one using a few more features, we called this set my_features
+
+Compute the RMSE (root mean squared error) on the test_data for the model using just
+my_features, and for the one using advanced_features.
+
+```{r question 3}
+set.seed(0)
+train_crit <- sample(nrow(sales), floor(nrow(sales) * 0.8))
+train_set <- sales[train_crit,]
+test_set <- sales[-train_crit,]
+
+model1 <- lm(price ~ bedrooms + bathrooms + sqft_living + sqft_lot + floors + 
+             zipcode, data=train_set)
+test_pred <- predict(model1, test_set)
+test_price <- test_set$price
+SS_residual <- sum((test_price - test_pred)^2)
+mod1_rmse <- sqrt(SS_residual/nrow(test_set))
+
+model2 <- lm(price ~ bedrooms + bathrooms + sqft_living + sqft_lot + floors + 
+             zipcode + condition + grade + waterfront + view + sqft_above +
+             sqft_basement + yr_built + yr_renovated + lat + long + 
+             sqft_living15 + sqft_lot15, data=train_set)
+test_pred2 <- predict(model2, test_set)
+SS_resid2 <- sum((test_price - test_pred2)^2)
+mod2_rmse <- sqrt(SS_resid2/nrow(test_set))
+mod1_rmse - mod2_rmse
+```

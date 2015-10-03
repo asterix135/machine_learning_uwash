@@ -1,0 +1,8 @@
+.DS_Store
+.RData
+.Rhistory
+.Rproj.user
+.ipynb_checkpoints
+home_data.csv
+home_data.gl
+
