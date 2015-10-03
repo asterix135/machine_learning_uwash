@@ -1,0 +1,31 @@
+---
+title: "Week 2 Quiz 2"
+author: "Christopher Graham"
+date: "October 3, 2015"
+output: pdf_document
+---
+
+1. Selection and summary statistics: In the notebook we covered in the module, we discovered which neighborhood (zip code) of Seattle had the highest average house sale price. Now, take the sales data, select only the houses with this zip code, and compute the average price. Save this result to answer the quiz at the end.
+
+```{r question 1}
+sales <- read.csv('home_data.csv', stringsAsFactors = F)
+require(lubridate)
+sales$date <- ymd(substr(sales$date, 1, 8))
+sales$zipcode <- as.factor(sales$zipcode)
+zip_avg <- tapply(sales$price, sales$zipcode, mean)
+top_zip_avg <- zip_avg[zip_avg==max(zip_avg)]
+top_zip_avg
+```
+
+2. Filtering data: One of the key features we used in our model was the number of square feet of living space (‘sqft_living’) in the house. For this part, we are going to use the idea of filtering (selecting) data.
+
+In particular, we are going to use logical filters to select rows of an SFrame. 
+
+Using such filters, first select the houses that have ‘sqft_living’ higher than 2000 sqft but no larger than 4000 sqft.
+
+What fraction of the all houses have ‘sqft_living’ in this range? Save this result to answer the quiz at the end.
+```{r}
+sales[sales$sqft_living > 2000 ]
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
